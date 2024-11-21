@@ -17,5 +17,5 @@ Rails.application.routes.draw do
     registrations: "users/registrations"
   }
 
-  resources :users
+  get "me", to: "users#me"
 end

@@ -3,7 +3,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
 
-  def index
-    render json: User.all, status: :ok
+  def me
+    @user = current_user
+    render :show
   end
 end
