@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :crews
   resources :people
   resources :episodes
   resources :seasons
