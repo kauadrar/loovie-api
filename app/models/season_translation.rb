@@ -1,0 +1,2 @@
+class SeasonTranslation < ApplicationRecord
+end

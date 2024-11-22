@@ -4,4 +4,5 @@ class Show < ApplicationRecord
   has_one :cast, as: :production
   has_many :genres, as: :title
   has_many :sub_genres, as: :title
+  has_many :production_translations, as: :production, dependent: :destroy
 end

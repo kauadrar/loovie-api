@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :season_translations
+  resources :production_translations
   resources :languages
   resources :sub_genres
   resources :genres
