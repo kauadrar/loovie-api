@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :sub_genres
+  resources :genres
   resources :casts
   resources :crews
   resources :people
