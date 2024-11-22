@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :languages
   resources :sub_genres
   resources :genres
   resources :casts
