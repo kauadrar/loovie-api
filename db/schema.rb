@@ -10,11 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_18_014557) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_22_014849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "users", force: :cascade do |t|
+  create_table "movies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "tmbdb_id"
+    t.string "original_name"
+    t.string "original_language"
+    t.datetime "release_date"
+    t.float "vote_average"
+    t.integer "vote_count"
+    t.string "backdrop_path"
+    t.float "popularity"
+    t.boolean "adult"
+    t.integer "duration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "shows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "tmbdb_id"
+    t.string "original_name"
+    t.string "original_language"
+    t.datetime "release_date"
+    t.float "vote_average"
+    t.integer "vote_count"
+    t.string "backdrop_path"
+    t.float "popularity"
+    t.boolean "adult"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
