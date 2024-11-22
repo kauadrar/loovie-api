@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_22_025013) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_22_030159) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -73,6 +73,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_22_025013) do
     t.index ["sub_genre_id"], name: "index_genre_sub_genres_on_sub_genre_id"
   end
 
+  create_table "genre_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "genre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["genre_id"], name: "index_genre_translations_on_genre_id"
+  end
+
   create_table "genres", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "tmdb_id"
     t.string "title_type", null: false
@@ -80,6 +88,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_22_025013) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["title_type", "title_id"], name: "index_genres_on_title"
+  end
+
+  create_table "languages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "code"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "movies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -108,6 +123,25 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_22_025013) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "production_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "overview"
+    t.string "poster_path"
+    t.uuid "language_id", null: false
+    t.string "production_type", null: false
+    t.uuid "production_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["language_id"], name: "index_production_translations_on_language_id"
+    t.index ["production_type", "production_id"], name: "index_production_translations_on_production"
+  end
+
+  create_table "season_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "overview"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "seasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "number"
     t.string "poster_path"
@@ -130,6 +164,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_22_025013) do
     t.boolean "adult"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "sub_genre_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "sub_genre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sub_genre_id"], name: "index_sub_genre_translations_on_sub_genre_id"
   end
 
   create_table "sub_genres", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -166,5 +208,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_22_025013) do
   add_foreign_key "episodes", "seasons"
   add_foreign_key "genre_sub_genres", "genres"
   add_foreign_key "genre_sub_genres", "sub_genres"
+  add_foreign_key "genre_translations", "genres"
+  add_foreign_key "production_translations", "languages"
   add_foreign_key "seasons", "shows"
+  add_foreign_key "sub_genre_translations", "sub_genres"
 end
