@@ -56,3 +56,5 @@ gem "devise-jwt", "~> 0.12.1"
 gem "dotenv", "~> 3.1"
 
 gem "jbuilder", "~> 2.13"
+
+gem "rest-client", "~> 2.1"
