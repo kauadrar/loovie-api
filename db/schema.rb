@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_22_030159) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_22_033029) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,7 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_22_030159) do
   end
 
   create_table "episodes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "tmbdb_id"
+    t.string "tmdb_id"
     t.string "original_name"
     t.string "original_language"
     t.datetime "release_date"
@@ -98,7 +98,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_22_030159) do
   end
 
   create_table "movies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "tmbdb_id"
+    t.string "tmdb_id"
     t.string "original_name"
     t.string "original_language"
     t.datetime "release_date"
@@ -153,7 +153,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_22_030159) do
   end
 
   create_table "shows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "tmbdb_id"
+    t.string "tmdb_id"
     t.string "original_name"
     t.string "original_language"
     t.datetime "release_date"
