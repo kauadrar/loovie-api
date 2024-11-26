@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_26_001926) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_26_003133) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -180,6 +180,26 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_26_001926) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "title_genres", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title_type", null: false
+    t.uuid "title_id", null: false
+    t.uuid "genre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["genre_id"], name: "index_title_genres_on_genre_id"
+    t.index ["title_type", "title_id"], name: "index_title_genres_on_title"
+  end
+
+  create_table "title_sub_genres", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title_type", null: false
+    t.uuid "title_id", null: false
+    t.uuid "sub_genre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sub_genre_id"], name: "index_title_sub_genres_on_sub_genre_id"
+    t.index ["title_type", "title_id"], name: "index_title_sub_genres_on_title"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -212,4 +232,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_26_001926) do
   add_foreign_key "seasons", "shows"
   add_foreign_key "sub_genre_translations", "languages"
   add_foreign_key "sub_genre_translations", "sub_genres"
+  add_foreign_key "title_genres", "genres"
+  add_foreign_key "title_sub_genres", "sub_genres"
 end

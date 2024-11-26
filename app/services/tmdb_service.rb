@@ -37,6 +37,19 @@ class TmdbService
         poster_path: tmdb_movie["poster_path"],
         overview: tmdb_movie["overview"],
       )
+
+      genre_ids = tmdb_movie["genre_ids"]
+
+      genre_ids.each do |genre_id|
+        genre = Genre.find_by(tmdb_id: genre_id)
+
+        next unless genre
+
+        TitleGenre.create(
+          genre: genre,
+          title: movie,
+        )
+      end
     end
   end
 
