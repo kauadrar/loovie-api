@@ -2,16 +2,14 @@
 
 one:
   name: MyString
-  overview: MyString
+  overview: MyText
   poster_path: MyString
   language: one
-  production: one
-  production_type: Production
+  show: one
 
 two:
   name: MyString
-  overview: MyString
+  overview: MyText
   poster_path: MyString
   language: two
-  production: two
-  production_type: Production
+  show: two

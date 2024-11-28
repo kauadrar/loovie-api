@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_26_003133) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_28_015514) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -96,6 +96,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_26_003133) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "movie_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.text "overview"
+    t.string "poster_path"
+    t.uuid "language_id", null: false
+    t.uuid "movie_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["language_id"], name: "index_movie_translations_on_language_id"
+    t.index ["movie_id"], name: "index_movie_translations_on_movie_id"
+  end
+
   create_table "movies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "tmdb_id"
     t.string "original_name"
@@ -122,33 +134,36 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_26_003133) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "production_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.string "overview"
-    t.string "poster_path"
-    t.uuid "language_id", null: false
-    t.string "production_type", null: false
-    t.uuid "production_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["language_id"], name: "index_production_translations_on_language_id"
-    t.index ["production_type", "production_id"], name: "index_production_translations_on_production"
-  end
-
   create_table "season_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "overview"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "poster_path"
+    t.string "name"
   end
 
   create_table "seasons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "number"
-    t.string "poster_path"
     t.string "backdrop_path"
     t.uuid "show_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "release_date"
+    t.integer "number_of_episodes"
+    t.float "vote_average"
     t.index ["show_id"], name: "index_seasons_on_show_id"
+  end
+
+  create_table "show_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.text "overview"
+    t.string "poster_path"
+    t.uuid "language_id", null: false
+    t.uuid "show_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["language_id"], name: "index_show_translations_on_language_id"
+    t.index ["show_id"], name: "index_show_translations_on_show_id"
   end
 
   create_table "shows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -163,6 +178,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_26_003133) do
     t.boolean "adult"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "number_of_seasons"
+    t.integer "number_of_episodes"
   end
 
   create_table "sub_genre_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -228,8 +245,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_26_003133) do
   add_foreign_key "genre_sub_genres", "sub_genres"
   add_foreign_key "genre_translations", "genres"
   add_foreign_key "genre_translations", "languages"
-  add_foreign_key "production_translations", "languages"
+  add_foreign_key "movie_translations", "languages"
+  add_foreign_key "movie_translations", "movies"
   add_foreign_key "seasons", "shows"
+  add_foreign_key "show_translations", "languages"
+  add_foreign_key "show_translations", "shows"
   add_foreign_key "sub_genre_translations", "languages"
   add_foreign_key "sub_genre_translations", "sub_genres"
   add_foreign_key "title_genres", "genres"

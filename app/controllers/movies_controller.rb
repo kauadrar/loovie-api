@@ -4,9 +4,9 @@ class MoviesController < ApplicationController
   # GET /movies
   # GET /movies.json
   def index
-    @production_translations = ProductionTranslation.search(params[:query], where: { production_type: "Movie", language_code: request.headers["accept-language"] })
+    @movie_translations = MovieTranslation.search(params[:query], where: { movie_type: "Movie", language_code: request.headers["accept-language"] })
 
-    render "production_translations/index"
+    render "movie_translations/index"
   end
 
   # GET /movies/1

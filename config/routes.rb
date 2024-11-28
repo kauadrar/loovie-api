@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
+  resources :movie_translations
+  resources :show_translations
   resources :season_translations
-  resources :production_translations
   resources :languages
   resources :sub_genres
   resources :genres

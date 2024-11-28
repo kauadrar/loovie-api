@@ -30,9 +30,9 @@ class TmdbService
         popularity: tmdb_movie["popularity"],
       )
 
-      ProductionTranslation.create(
-        production: movie,
-        language: language,
+      MovieTranslation.create(
+        movie:,
+        language:,
         name: tmdb_movie["title"],
         poster_path: tmdb_movie["poster_path"],
         overview: tmdb_movie["overview"],
@@ -76,9 +76,9 @@ class TmdbService
         popularity: tmdb_show["popularity"],
       )
 
-      ProductionTranslation.create(
-        production: show,
-        language: language,
+      ShowTranslation.create(
+        show:,
+        language:,
         name: tmdb_show["name"],
         poster_path: tmdb_show["poster_path"],
         overview: tmdb_show["overview"],
