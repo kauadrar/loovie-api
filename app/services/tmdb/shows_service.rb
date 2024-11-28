@@ -43,5 +43,39 @@ module Tmdb
         end
       end
     end
+
+    def get_details(tmdb_id)
+      response = @tmdb_api["/tv/#{tmdb_id}?language=#{@language.code}"].get
+      tmdb_show = JSON.parse(response.body)
+
+      show = Show.find_by(tmdb_id: tmdb_id)
+
+      if show
+        show.update(
+          number_of_seasons: tmdb_show["number_of_seasons"],
+          number_of_episodes: tmdb_show["number_of_episodes"],
+        )
+
+        tmdb_seasons = tmdb_show["seasons"]
+        tmdb_seasons.each do |tmdb_season|
+          season = Season.create(
+            show: show,
+            tmdb_id: tmdb_season["id"],
+            number: tmdb_season["season_number"],
+            number_of_episodes: tmdb_season["episode_count"],
+            release_date: Date.parse(tmdb_season["air_date"]),
+            vote_average: tmdb_season["vote_average"],
+          )
+
+          SeasonTranslation.create(
+            season: season,
+            language: @language,
+            name: tmdb_season["name"],
+            overview: tmdb_season["overview"],
+            poster_path: tmdb_season["poster_path"],
+          )
+        end
+      end
+    end
   end
 end
