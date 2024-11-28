@@ -4,7 +4,9 @@ class ShowsController < ApplicationController
   # GET /shows
   # GET /shows.json
   def index
-    @shows = Show.all
+    @show_translations = ShowTranslation.search(params[:query], where: { language_code: request.headers["accept-language"] })
+
+    render "show_translations/index"
   end
 
   # GET /shows/1
