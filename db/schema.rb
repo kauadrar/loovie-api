@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_29_001816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,10 +48,16 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
     t.index ["production_type", "production_id"], name: "index_crews_on_production"
   end
 
+  create_table "episode_traslations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.text "overview"
+    t.uuid "episode_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["episode_id"], name: "index_episode_traslations_on_episode_id"
+  end
+
   create_table "episodes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "tmdb_id"
-    t.string "original_name"
-    t.string "original_language"
     t.datetime "release_date"
     t.float "vote_average"
     t.integer "vote_count"
@@ -61,6 +67,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
     t.uuid "season_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "tmdb_id"
     t.index ["season_id"], name: "index_episodes_on_season_id"
   end
 
@@ -84,9 +91,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
   end
 
   create_table "genres", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "tmdb_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "tmdb_id"
   end
 
   create_table "languages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -109,7 +116,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
   end
 
   create_table "movies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "tmdb_id"
     t.string "original_name"
     t.string "original_language"
     t.datetime "release_date"
@@ -121,6 +127,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "tmdb_id"
   end
 
   create_table "people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -135,13 +142,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
   end
 
   create_table "season_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "overview"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "poster_path"
     t.string "name"
     t.uuid "season_id", null: false
     t.uuid "language_id", null: false
+    t.text "overview"
     t.index ["language_id"], name: "index_season_translations_on_language_id"
     t.index ["season_id"], name: "index_season_translations_on_season_id"
   end
@@ -152,9 +159,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "release_date"
-    t.integer "number_of_episodes"
-    t.float "vote_average"
     t.integer "tmdb_id"
+    t.float "vote_average"
     t.index ["show_id"], name: "index_seasons_on_show_id"
   end
 
@@ -171,7 +177,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
   end
 
   create_table "shows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "tmdb_id"
     t.string "original_name"
     t.string "original_language"
     t.datetime "release_date"
@@ -182,8 +187,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
     t.boolean "adult"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "number_of_seasons"
-    t.integer "number_of_episodes"
+    t.bigint "tmdb_id"
   end
 
   create_table "sub_genre_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -244,6 +248,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_28_034549) do
   add_foreign_key "cast_members", "people"
   add_foreign_key "crew_members", "crews"
   add_foreign_key "crew_members", "people"
+  add_foreign_key "episode_traslations", "episodes"
   add_foreign_key "episodes", "seasons"
   add_foreign_key "genre_sub_genres", "genres"
   add_foreign_key "genre_sub_genres", "sub_genres"

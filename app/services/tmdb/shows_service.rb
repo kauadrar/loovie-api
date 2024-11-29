@@ -1,7 +1,7 @@
 module Tmdb
   class ShowsService < TmdbService
     def discover_shows
-      response = @tmdb_api["/discover/tv?language=#{@language.code}"].get
+      response = @tmdb_api["/discover/tv?language=#{@language.code}&sort_by=vote_count.desc"].get
 
       tmdb_shows = JSON.parse(response.body)["results"]
 
@@ -15,7 +15,7 @@ module Tmdb
           original_name: tmdb_show["original_name"],
           original_language: tmdb_show["original_language"],
           backdrop_path: tmdb_show["backdrop_path"],
-          release_date: Date.parse(tmdb_show["first_air_date"]),
+          release_date: tmdb_show["first_air_date"] ? Date.parse(tmdb_show["first_air_date"]) : nil,
           vote_average: tmdb_show["vote_average"],
           vote_count: tmdb_show["vote_count"],
           popularity: tmdb_show["popularity"],
@@ -44,37 +44,31 @@ module Tmdb
       end
     end
 
-    def get_details(tmdb_id)
+    def get_seasons(tmdb_id)
       response = @tmdb_api["/tv/#{tmdb_id}?language=#{@language.code}"].get
       tmdb_show = JSON.parse(response.body)
 
       show = Show.find_by(tmdb_id: tmdb_id)
 
-      if show
-        show.update(
-          number_of_seasons: tmdb_show["number_of_seasons"],
-          number_of_episodes: tmdb_show["number_of_episodes"],
+      tmdb_seasons = tmdb_show["seasons"]
+      tmdb_seasons.each do |tmdb_season|
+        next if Season.exists?(tmdb_id: tmdb_season["id"])
+
+        season = Season.create(
+          show: show,
+          tmdb_id: tmdb_season["id"],
+          number: tmdb_season["season_number"],
+          release_date: tmdb_season["air_date"] ? Date.parse(tmdb_season["air_date"]) : nil,
+          vote_average: tmdb_season["vote_average"],
         )
 
-        tmdb_seasons = tmdb_show["seasons"]
-        tmdb_seasons.each do |tmdb_season|
-          season = Season.create(
-            show: show,
-            tmdb_id: tmdb_season["id"],
-            number: tmdb_season["season_number"],
-            number_of_episodes: tmdb_season["episode_count"],
-            release_date: Date.parse(tmdb_season["air_date"]),
-            vote_average: tmdb_season["vote_average"],
-          )
-
-          SeasonTranslation.create(
-            season: season,
-            language: @language,
-            name: tmdb_season["name"],
-            overview: tmdb_season["overview"],
-            poster_path: tmdb_season["poster_path"],
-          )
-        end
+        SeasonTranslation.create(
+          season: season,
+          language: @language,
+          name: tmdb_season["name"],
+          overview: tmdb_season["overview"],
+          poster_path: tmdb_season["poster_path"],
+        )
       end
     end
   end

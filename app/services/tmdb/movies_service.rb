@@ -1,7 +1,7 @@
 module Tmdb
   class MoviesService < TmdbService
     def discover_movies
-      response = @tmdb_api["/discover/movie?language=#{@language.code}"].get
+      response = @tmdb_api["/discover/movie?language=#{@language.code}&sort_by=vote_count.desc"].get
 
       tmdb_movies = JSON.parse(response.body)["results"]
 

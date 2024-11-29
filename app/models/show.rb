@@ -1,7 +1,7 @@
 class Show < ApplicationRecord
   searchkick
 
-  has_many :seasons
+  has_many :seasons, dependent: :destroy
   has_one :crew, as: :production
   has_one :cast, as: :production
   has_many :show_translations, dependent: :destroy
