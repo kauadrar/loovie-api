@@ -60,4 +60,4 @@ gem "jbuilder", "~> 2.13"
 gem "rest-client", "~> 2.1"
 
 gem "searchkick", "~> 5.4"
-gem "elasticsearch", "~> 8.16"
+gem "elasticsearch", "~> 8.17"
