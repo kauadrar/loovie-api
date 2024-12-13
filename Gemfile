@@ -61,3 +61,8 @@ gem "rest-client", "~> 2.1"
 
 gem "searchkick", "~> 5.4"
 gem "elasticsearch", "~> 8.16"
+
+gem "redis", "~> 5.3"
+gem "sidekiq", "~> 7.3"
+
+gem "sidekiq-scheduler", "~> 5.0"
