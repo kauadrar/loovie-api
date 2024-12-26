@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_29_001816) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_24_055331) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,7 +19,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_29_001816) do
     t.uuid "cast_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "character_id", null: false
     t.index ["cast_id"], name: "index_cast_members_on_cast_id"
+    t.index ["character_id"], name: "index_cast_members_on_character_id"
     t.index ["person_id"], name: "index_cast_members_on_person_id"
   end
 
@@ -31,11 +33,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_29_001816) do
     t.index ["production_type", "production_id"], name: "index_casts_on_production"
   end
 
+  create_table "characters", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "crew_members", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "person_id", null: false
     t.uuid "crew_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role"
     t.index ["crew_id"], name: "index_crew_members_on_crew_id"
     t.index ["person_id"], name: "index_crew_members_on_person_id"
   end
@@ -245,6 +254,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_29_001816) do
   end
 
   add_foreign_key "cast_members", "casts"
+  add_foreign_key "cast_members", "characters"
   add_foreign_key "cast_members", "people"
   add_foreign_key "crew_members", "crews"
   add_foreign_key "crew_members", "people"
