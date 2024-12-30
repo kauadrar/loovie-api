@@ -11,6 +11,8 @@ class User < ApplicationRecord
   validates :username, presence: true, uniqueness: { case_sensitive: false }
   validate :validate_username
 
+  has_many :posts, dependent: :destroy
+
   def validate_username
     if User.where(email: username).exists?
       errors.add(:username, :invalid)

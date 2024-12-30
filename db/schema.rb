@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_24_055331) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_30_170049) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -139,6 +139,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_24_055331) do
     t.bigint "tmdb_id"
   end
 
+  create_table "normal_posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "post_id", null: false
+    t.text "text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_normal_posts_on_post_id"
+  end
+
   create_table "people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "main_profession"
@@ -148,6 +156,43 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_24_055331) do
     t.string "profile_picture_path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "post_genres", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "post_id", null: false
+    t.uuid "genre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["genre_id"], name: "index_post_genres_on_genre_id"
+    t.index ["post_id"], name: "index_post_genres_on_post_id"
+  end
+
+  create_table "post_sub_genres", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "post_id", null: false
+    t.uuid "sub_genre_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_sub_genres_on_post_id"
+    t.index ["sub_genre_id"], name: "index_post_sub_genres_on_sub_genre_id"
+  end
+
+  create_table "post_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "post_id", null: false
+    t.uuid "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_tags_on_post_id"
+    t.index ["tag_id"], name: "index_post_tags_on_tag_id"
+  end
+
+  create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "content_type"
+    t.bigint "content_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["content_type", "content_id"], name: "index_posts_on_content"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "season_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -214,6 +259,12 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_24_055331) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "title_genres", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title_type", null: false
     t.uuid "title_id", null: false
@@ -266,6 +317,14 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_24_055331) do
   add_foreign_key "genre_translations", "languages"
   add_foreign_key "movie_translations", "languages"
   add_foreign_key "movie_translations", "movies"
+  add_foreign_key "normal_posts", "posts"
+  add_foreign_key "post_genres", "genres"
+  add_foreign_key "post_genres", "posts"
+  add_foreign_key "post_sub_genres", "posts"
+  add_foreign_key "post_sub_genres", "sub_genres"
+  add_foreign_key "post_tags", "posts"
+  add_foreign_key "post_tags", "tags"
+  add_foreign_key "posts", "users"
   add_foreign_key "season_translations", "languages"
   add_foreign_key "season_translations", "seasons"
   add_foreign_key "seasons", "shows"
