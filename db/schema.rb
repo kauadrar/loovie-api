@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_30_170049) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_16_224606) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -57,13 +57,13 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_30_170049) do
     t.index ["production_type", "production_id"], name: "index_crews_on_production"
   end
 
-  create_table "episode_traslations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "episode_translations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.text "overview"
     t.uuid "episode_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["episode_id"], name: "index_episode_traslations_on_episode_id"
+    t.index ["episode_id"], name: "index_episode_translations_on_episode_id"
   end
 
   create_table "episodes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -309,7 +309,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_30_170049) do
   add_foreign_key "cast_members", "people"
   add_foreign_key "crew_members", "crews"
   add_foreign_key "crew_members", "people"
-  add_foreign_key "episode_traslations", "episodes"
+  add_foreign_key "episode_translations", "episodes"
   add_foreign_key "episodes", "seasons"
   add_foreign_key "genre_sub_genres", "genres"
   add_foreign_key "genre_sub_genres", "sub_genres"
