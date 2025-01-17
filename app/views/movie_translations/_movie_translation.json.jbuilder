@@ -1,4 +1,7 @@
-json.extract! movie_translation, :id, :name, :overview, :poster_path, :language_id, :movie_id, :created_at, :updated_at
+json.id movie_translation.movie_id
+json.translation_id movie_translation.id
+
+json.extract! movie_translation, :name, :overview, :poster_path, :language_id, :created_at, :updated_at
 
 json.popularity movie_translation.movie.popularity
 json.adult movie_translation.movie.adult

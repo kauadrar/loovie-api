@@ -1,4 +1,7 @@
-json.extract! show_translation, :id, :name, :overview, :poster_path, :language_id, :show_id, :created_at, :updated_at
+json.id show_translation.show_id
+json.translation_id show_translation.id
+
+json.extract! show_translation, :name, :overview, :poster_path, :language_id, :created_at, :updated_at
 
 json.popularity show_translation.show.popularity
 json.adult show_translation.show.adult
