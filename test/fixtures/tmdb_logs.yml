@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  action: MyString
+  last_page_fetched: 1
+  entity: one
+  entity_type: Entity
+
+two:
+  action: MyString
+  last_page_fetched: 1
+  entity: two
+  entity_type: Entity

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  class_name: MyString
+  message: MyString
+  backtrace: MyText
+  body: MyText
+  tmdb_log: one
+
+two:
+  class_name: MyString
+  message: MyString
+  backtrace: MyText
+  body: MyText
+  tmdb_log: two

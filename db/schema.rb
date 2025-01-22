@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_16_224606) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_22_025100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -285,6 +285,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_16_224606) do
     t.index ["title_type", "title_id"], name: "index_title_sub_genres_on_title"
   end
 
+  create_table "tmdb_errors", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "class_name"
+    t.string "message"
+    t.text "backtrace"
+    t.text "body"
+    t.uuid "tmdb_log_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tmdb_log_id"], name: "index_tmdb_errors_on_tmdb_log_id"
+  end
+
+  create_table "tmdb_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "action"
+    t.integer "last_page_fetched"
+    t.string "entity_type"
+    t.uuid "entity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entity_type", "entity_id"], name: "index_tmdb_logs_on_entity"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -334,4 +355,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_16_224606) do
   add_foreign_key "sub_genre_translations", "sub_genres"
   add_foreign_key "title_genres", "genres"
   add_foreign_key "title_sub_genres", "sub_genres"
+  add_foreign_key "tmdb_errors", "tmdb_logs"
 end
