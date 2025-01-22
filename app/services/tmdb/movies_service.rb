@@ -1,7 +1,13 @@
 module Tmdb
   class MoviesService < TmdbService
-    def discover_movies
-      response = @tmdb_api["/discover/movie?language=#{@language.code}&sort_by=vote_count.desc"].get
+    def discover_movies(page: 1, sort_by: "vote_count", sort_order: "desc")
+      query_params = {
+        language: @language.code,
+        sort_by: "#{sort_by}.#{sort_order}",
+        page:
+      }.to_query
+
+      response = @tmdb_api["/discover/movie?#{query_params}"].get
 
       tmdb_movies = JSON.parse(response.body)["results"]
 

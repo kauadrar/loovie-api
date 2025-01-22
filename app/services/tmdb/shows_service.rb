@@ -1,7 +1,13 @@
 module Tmdb
   class ShowsService < TmdbService
-    def discover_shows
-      response = @tmdb_api["/discover/tv?language=#{@language.code}&sort_by=vote_count.desc"].get
+    def discover_shows(page: 1, sort_by: "vote_count", sort_order: "desc")
+      query_params = {
+        language: @language.code,
+        sort_by: "#{sort_by}.#{sort_order}",
+        page:
+      }.to_query
+
+      response = @tmdb_api["/discover/tv?#{query_params}"].get
 
       tmdb_shows = JSON.parse(response.body)["results"]
 
@@ -45,7 +51,11 @@ module Tmdb
     end
 
     def get_seasons(tmdb_id)
-      response = @tmdb_api["/tv/#{tmdb_id}?language=#{@language.code}"].get
+      query_params = {
+        language: @language.code
+      }.to_query
+
+      response = @tmdb_api["/tv/#{tmdb_id}?#{query_params}"].get
       tmdb_show = JSON.parse(response.body)
 
       show = Show.find_by(tmdb_id: tmdb_id)

@@ -2,10 +2,13 @@ module Tmdb
   class SeasonsService < TmdbService
     def get_episodes(tmdb_id)
       season = Season.find_by(tmdb_id:)
-      response = @tmdb_api["/tv/#{season.show.tmdb_id}/season/#{season.number}?language=#{@language.code}"].get
-      response_body = JSON.parse(response.body)
 
-      puts "response_body: #{response_body}"
+      query_params = {
+        language: @language.code
+      }.to_query
+
+      response = @tmdb_api["/tv/#{season.show.tmdb_id}/season/#{season.number}?#{query_params}"].get
+      response_body = JSON.parse(response.body)
 
       tmdb_episodes = response_body["episodes"]
 
