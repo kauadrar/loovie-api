@@ -9,4 +9,5 @@ class Show < ApplicationRecord
   has_many :genres, through: :title_genres
   has_many :title_sub_genres, as: :title, dependent: :destroy
   has_many :sub_genres, through: :title_sub_genres
+  has_many :tmdb_logs, as: :entity, dependent: :destroy
 end
