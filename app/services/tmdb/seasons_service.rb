@@ -1,7 +1,7 @@
 module Tmdb
   class SeasonsService < TmdbService
-    def get_episodes(tmdb_id)
-      season = Season.find_by(tmdb_id:)
+    def get_episodes(season_tmdb_id)
+      season = Season.find_by(tmdb_id: season_tmdb_id)
 
       query_params = {
         language: @language.code

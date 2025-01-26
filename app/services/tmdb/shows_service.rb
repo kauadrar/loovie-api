@@ -12,53 +12,49 @@ module Tmdb
       tmdb_shows = JSON.parse(response.body)["results"]
 
       tmdb_shows.each do |tmdb_show|
-        tmdb_id = tmdb_show["id"]
+        show = create_show(tmdb_show)
 
-        next if Show.exists?(tmdb_id: tmdb_id)
+        next unless show.present?
 
-        show = Show.create(
-          tmdb_id:,
-          original_name: tmdb_show["original_name"],
-          original_language: tmdb_show["original_language"],
-          backdrop_path: tmdb_show["backdrop_path"],
-          release_date: tmdb_show["first_air_date"] ? Date.parse(tmdb_show["first_air_date"]) : nil,
-          vote_average: tmdb_show["vote_average"],
-          vote_count: tmdb_show["vote_count"],
-          popularity: tmdb_show["popularity"],
-        )
-
-        ShowTranslation.create(
-          show:,
-          language: @language,
-          name: tmdb_show["name"],
-          poster_path: tmdb_show["poster_path"],
-          overview: tmdb_show["overview"],
-        )
-
-        genre_ids = tmdb_show["genre_ids"]
-
-        genre_ids.each do |genre_id|
-          genre = Genre.find_by(tmdb_id: genre_id)
-
-          next unless genre
-
-          TitleGenre.create(
-            genre: genre,
-            title: show,
-          )
-        end
+        add_genres(tmdb_show["genre_ids"], show)
+        get_seasons(tmdb_show["id"])
       end
     end
 
-    def get_seasons(tmdb_id)
+    def create_show(tmdb_show)
+      tmdb_id = tmdb_show["id"]
+
+      return nil if Show.exists?(tmdb_id:)
+
+      show = Show.create(
+        tmdb_id:,
+        original_name: tmdb_show["original_name"],
+        original_language: tmdb_show["original_language"],
+        backdrop_path: tmdb_show["backdrop_path"],
+        release_date: tmdb_show["first_air_date"].present? ? Date.parse(tmdb_show["first_air_date"]) : nil,
+        vote_average: tmdb_show["vote_average"],
+        vote_count: tmdb_show["vote_count"],
+        popularity: tmdb_show["popularity"],
+      )
+
+      ShowTranslation.create(
+        show:,
+        language: @language,
+        name: tmdb_show["name"],
+        poster_path: tmdb_show["poster_path"],
+        overview: tmdb_show["overview"],
+      )
+    end
+
+    def get_seasons(show_tmdb_id)
       query_params = {
         language: @language.code
       }.to_query
 
-      response = @tmdb_api["/tv/#{tmdb_id}?#{query_params}"].get
+      response = @tmdb_api["/tv/#{show_tmdb_id}?#{query_params}"].get
       tmdb_show = JSON.parse(response.body)
 
-      show = Show.find_by(tmdb_id: tmdb_id)
+      show = Show.find_by(tmdb_id: show_tmdb_id)
 
       tmdb_seasons = tmdb_show["seasons"]
       tmdb_seasons.each do |tmdb_season|
@@ -79,6 +75,10 @@ module Tmdb
           overview: tmdb_season["overview"],
           poster_path: tmdb_season["poster_path"],
         )
+
+        seasons_service = Tmdb::SeasonsService.new
+
+        seasons_service.get_episodes(season.tmdb_id)
       end
     end
   end

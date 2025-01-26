@@ -7,5 +7,18 @@ module Tmdb
       })
       @language = Language.find_or_create_by(code: language_code, name: language_name)
     end
+
+    def add_genres(genre_ids, title)
+      genre_ids.each do |genre_id|
+        genre = Genre.find_by(tmdb_id: genre_id)
+
+        next unless genre
+
+        TitleGenre.create(
+          genre: genre,
+          title: title,
+        )
+      end
+    end
   end
 end
