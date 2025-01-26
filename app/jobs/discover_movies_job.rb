@@ -1,5 +1,5 @@
 class DiscoverMoviesJob < TmdbBaseJob
-  def perform(sort_by: "vote_count")
+  def perform(sort_by = "vote_count")
     movies_service = Tmdb::MoviesService.new
 
     @tmdb_log = TmdbLog.find_or_create_by!(entity_type: "Movie", action: "discover_movies_by_#{sort_by}")
