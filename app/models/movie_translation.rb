@@ -1,5 +1,5 @@
 class MovieTranslation < ApplicationRecord
-  searchkick
+  searchkick word_start: [ :name ]
   belongs_to :language
   belongs_to :movie
   scope :search_import, -> { includes(:movie) }
@@ -12,7 +12,9 @@ class MovieTranslation < ApplicationRecord
       vote_average: movie.vote_average,
       vote_count: movie.vote_count,
       language_code: language.code,
-      popularity: movie.popularity
+      popularity: movie.popularity,
+      adult: movie.adult,
+      type: "movie"
     )
   end
 end

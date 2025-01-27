@@ -1,5 +1,5 @@
 class ShowTranslation < ApplicationRecord
-  searchkick
+  searchkick word_start: [ :name ]
   belongs_to :language
   belongs_to :show
   scope :search_import, -> { includes(:show) }
@@ -12,7 +12,9 @@ class ShowTranslation < ApplicationRecord
       vote_average: show.vote_average,
       vote_count: show.vote_count,
       language_code: language.code,
-      popularity: show.popularity
+      popularity: show.popularity,
+      adult: show.adult,
+      type: "show"
     )
   end
 end
