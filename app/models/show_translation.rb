@@ -1,5 +1,5 @@
 class ShowTranslation < ApplicationRecord
-  searchkick word_start: [ :name ]
+  searchkick word_start: [ :name, :original_name ]
   belongs_to :language
   belongs_to :show
   scope :search_import, -> { includes(:show) }
