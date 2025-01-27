@@ -11,4 +11,12 @@ class TitlesController < ApplicationController
 
     render "titles/index"
   end
+
+  def autocomplete
+    language_code = request.headers["accept-language"]
+
+    @titles = Searchkick.search(params[:query], models: [ MovieTranslation, ShowTranslation ], fields: [ :name ], where: { language_code: language_code }, misspellings: false, load: false, limit: 10, match: :word_start)
+
+    render json: @titles.map { |t| t["name"] }.map(&:downcase).uniq, status: :ok
+  end
 end
