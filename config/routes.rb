@@ -41,4 +41,5 @@ Rails.application.routes.draw do
   }
 
   get "me", to: "users#me"
+  get "users/exists", to: "users#exists"
 end
