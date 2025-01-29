@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   before_action :configure_permitted_parameters, if: :devise_controller?
+  after_action { puts response.body }
 
   protected
 
