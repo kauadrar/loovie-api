@@ -1,4 +1,4 @@
 class Post < ApplicationRecord
   belongs_to :user
-  has_one :content, dependent: :destroy, polymorphic: true
+  has_one :content, dependent: :destroy
 end
