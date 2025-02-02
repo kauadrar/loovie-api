@@ -68,13 +68,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if request.method == "POST" && resource.persisted?
       render "users/show", locals: { user: current_user }, status: :created
     elsif request.method == "DELETE"
-      render json: {
-        status: { code: 200, message: "Account deleted successfully." }
-      }, status: :ok
+      render json: { message: "Account deleted successfully." }, status: :ok
     else
-      render json: {
-        status: { code: 422, message: "User couldn't be created successfully. #{resource.errors.full_messages.to_sentence}" }
-      }, status: :unprocessable_entity
+      render json: { error: "User couldn't be created successfully. #{resource.errors.full_messages.to_sentence}" }, status: :unprocessable_entity
     end
   end
 end
